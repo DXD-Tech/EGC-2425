@@ -117,3 +117,20 @@ def test_service_create_with_profile_fail_no_password(clean_database):
 
     assert UserRepository().count() == 0
     assert UserProfileRepository().count() == 0
+
+
+def test_service_create_with_profile_fail_empty_fields(clean_database):
+    data = {
+        "name": "",
+        "surname": "",
+        "email": "",
+        "password": ""
+    }
+
+    # La primera comprobación es si el email está vacío.
+    # Por ello, el error que se lanza es Email is required.
+    with pytest.raises(ValueError, match="Email is required."):
+        AuthenticationService().create_with_profile(**data)
+
+    assert UserRepository().count() == 0
+    assert UserProfileRepository().count() == 0
